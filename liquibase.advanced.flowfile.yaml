@@ -29,6 +29,7 @@
 ## The variables will be used as ${namespace.variablename}, seen in this example as ${FLOWVARS.PROJNAME}
 include:
   FLOWVARS: liquibase.flowvariables.yaml
+  path: .
 
 
 
