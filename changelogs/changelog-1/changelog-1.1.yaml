@@ -1,0 +1,75 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.1.0
+      author: hexa
+      labels: user accounts table
+      context: development
+      comment: user account table
+      changes:
+        - createTable:
+            tableName: accounts
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    indexed: true
+                    indexName: idx_accounts_id
+                    nullable: false
+                    defaultValueComputed: 'uuid_generate_v7()'
+                    indexType: btree
+              - column:
+                  name: username
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    unique: true
+                    indexName: idx_accounts_username
+                    indexType: btree
+              - column:
+                  name: email
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    unique: true
+                    indexName: idx_accounts_email
+                    indexType: btree
+              - column:
+                  name: full_name
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: password_hash
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_user_password
+                    reference: accounts(id)
+                    indexed: true
+                    indexName: idx_password_hash_id
+                    nullable: false
+                    indexType: btree
+                    unique: true
+              - column:
+                  name: password_hash
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: salt
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: password_hash
+            baseColumnNames: user_id
+            constraintName: fk_user_password
+            referencedTableName: accounts
+            referencedColumnNames: id
+            onDelete: CASCADE
